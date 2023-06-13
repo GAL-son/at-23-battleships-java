@@ -15,6 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -117,7 +118,23 @@ public class SetShipsController {
             }
         }
         drawBoardPlacing();
-        //updateCountShips();//chaneg
+        updateCountShips();//chaneg
+    }
+
+    private void updateCountShips() {
+        ArrayList<Integer> a = Game.histogram(game_this.getPlayer1().shipsSizes);
+        a = Game.histogram(game_this.getPlayer1().shipsSizes);
+
+        Label label4=(Label)this.AdditionalELMap.get("shipCount4");
+        Label label3=(Label)this.AdditionalELMap.get("shipCount3");
+        Label label2=(Label)this.AdditionalELMap.get("shipCount2");
+        Label label1=(Label)this.AdditionalELMap.get("shipCount1");
+
+        label4.setText(String.valueOf(a.get(3)) + "x lotniskowiec");
+        label3.setText(String.valueOf(a.get(2)) + "x 3 masztowiec");
+        label2.setText(String.valueOf(a.get(1)) + "x łódź podwodna");
+        label1.setText(String.valueOf(a.get(0)) + "x P O N T O N");
+
     }
 
     private void createGame() {
@@ -184,6 +201,9 @@ public class SetShipsController {
         label3.setText("sie");
         label2.setText("rozuimiesz");
         label1.setText("?");
+
+        //ustawienie ilosci statków do postawienia
+        updateCountShips();
 
     }
 
