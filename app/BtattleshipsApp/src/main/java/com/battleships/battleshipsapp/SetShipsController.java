@@ -79,6 +79,11 @@ public class SetShipsController {
     private void handleButtonClick(Button button) {
         String id = getButtonId(button);
         System.out.println("Clicked button ID: " + id);
+        button.setStyle("-fx-background-color: " + toHex(Color.RED) + ";");
+    }
+
+    private String toHex(Color color) {
+        return "#" + color.toString().substring(2, 8);
     }
 
     private String getButtonId(Button button) {
