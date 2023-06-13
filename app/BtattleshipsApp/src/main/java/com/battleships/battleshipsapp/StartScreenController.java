@@ -1,7 +1,7 @@
 package com.battleships.battleshipsapp;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import java.io.IOException;
 
 public class StartScreenController {
 
@@ -11,7 +11,7 @@ public class StartScreenController {
     }
 
     @FXML
-    private void onPlayAsGuestButtonClick(){
-
+    private void onPlayAsGuestButtonClick() throws IOException {
+        App.setRoot("main_menu");
     }
 }
