@@ -3,12 +3,14 @@ package com.battleships.battleshipsapp;
 import com.battleships.battleshipsapp.model.Game;
 import com.battleships.battleshipsapp.model.Move;
 import com.battleships.battleshipsapp.model.board.Field;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -23,7 +25,7 @@ import java.util.Random;
 public class SetShipsController {
     private static final int BOARD_SIZE = 10;
     private Stage stage;
-
+    public Integer test = 1;
     Integer alignemnet = 0;
     Game game_this;
 
@@ -37,6 +39,10 @@ public class SetShipsController {
     }
     private void changeAlignment() {
         this.alignemnet=(alignemnet+1)%2;
+    }
+
+    public void setTest(Integer test_) {
+        this.test=test_;
     }
 
 
@@ -72,9 +78,20 @@ public class SetShipsController {
             this.AdditionalELMap.put("goBackButton",goBackButton);
         }
 
-        goBackButton.setOnAction(e->goBackToMainMenu());
+        goBackButton.setOnAction(e-> {
+            try {
+                goBackToMainMenu(e);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
         playButton.setOnAction(e-> {
-            goToGameScreen();
+            try {
+                goToGameScreen(e);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         });
 
         // Ustawienie preferowanego rozmiaru przycisków
@@ -134,10 +151,10 @@ public class SetShipsController {
         Label label2=(Label)this.AdditionalELMap.get("shipCount2");
         Label label1=(Label)this.AdditionalELMap.get("shipCount1");
 
-        label4.setText(String.valueOf(a.get(3)) + "x lotniskowiec");
-        label3.setText(String.valueOf(a.get(2)) + "x 3 masztowiec");
-        label2.setText(String.valueOf(a.get(1)) + "x łódź podwodna");
-        label1.setText(String.valueOf(a.get(0)) + "x P O N T O N");
+        label4.setText(String.valueOf(a.get(3)) + "x 4-masztowiec");
+        label3.setText(String.valueOf(a.get(2)) + "x 3-masztowiec");
+        label2.setText(String.valueOf(a.get(1)) + "x 2-masztowiec");
+        label1.setText(String.valueOf(a.get(0)) + "x 1-masztowiec");
 
     }
 
@@ -261,17 +278,36 @@ public class SetShipsController {
         return null;
     }
 
-    private void goBackToMainMenu(){
-        System.out.println("bbbbbb");
-        //App.setRoot("main_menu");
-        Stage primaryStage = (Stage) App.getScene().getWindow();
-        new MainMenuController();
+    private void goBackToMainMenu(ActionEvent event) throws IOException {
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("main_menu.fxml"));
+        Parent mainMenuView = loader.load();
+        MainMenuController mainMenuController = loader.getController();
+        stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(mainMenuView));
+        mainMenuController.setStage(stage);
+        stage.show();
     }
 
-    private void goToGameScreen(){
-        System.out.println("aaaaaa");
-        //App.setRoot("game_screen");
-        new GameScreenController(stage);
+    private void goToGameScreen(ActionEvent event) throws IOException {
+
+
+        if (this.game_this.getPlayer1().shipsSizes.isEmpty()) {
+            {
+                //tutaj stack połąćzenia z  serwerem
+            }
+
+            //przesłąnie gry
+
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("game_screen.fxml"));
+                Parent gameScreenView = loader.load();
+                GameScreenController gameScreenController = loader.getController();
+                gameScreenController.setGame(game_this);
+                stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                stage.setScene( new Scene(gameScreenView));
+                gameScreenController.stageInit(stage);
+
+        }
     }
 
 }
