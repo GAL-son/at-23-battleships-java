@@ -15,6 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -32,7 +33,6 @@ public class SetShipsController {
     public SetShipsController(Stage stage) {
         this.stage = stage;
         initializeUI();
-
 
     }
     private void changeAlignment() {
@@ -66,12 +66,16 @@ public class SetShipsController {
 
         Button goBackButton = new Button("Go Back");
         Button playButton = new Button("Play");
-        
+
         {////dodanie buttonów do mapy
             this.AdditionalELMap.put("playButton",playButton);
             this.AdditionalELMap.put("goBackButton",goBackButton);
-
         }
+
+        goBackButton.setOnAction(e->goBackToMainMenu());
+        playButton.setOnAction(e-> {
+            goToGameScreen();
+        });
 
         // Ustawienie preferowanego rozmiaru przycisków
         clearButton.setPrefWidth(100);
@@ -256,4 +260,18 @@ public class SetShipsController {
         }
         return null;
     }
+
+    private void goBackToMainMenu(){
+        System.out.println("bbbbbb");
+        //App.setRoot("main_menu");
+        Stage primaryStage = (Stage) App.getScene().getWindow();
+        new MainMenuController();
+    }
+
+    private void goToGameScreen(){
+        System.out.println("aaaaaa");
+        //App.setRoot("game_screen");
+        new GameScreenController(stage);
+    }
+
 }

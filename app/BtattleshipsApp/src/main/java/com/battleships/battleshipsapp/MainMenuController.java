@@ -8,12 +8,12 @@ import java.io.IOException;
 public class MainMenuController {
 
     @FXML
-    private void logOut() throws IOException {
+    private void logOut(){
         App.setRoot("start_screen");
     }
 
     @FXML
-    private void playSinglePlayer() throws IOException {
+    private void playSinglePlayer() {
         Stage primaryStage = (Stage) App.getScene().getWindow();
         new SetShipsController(primaryStage);
     }
