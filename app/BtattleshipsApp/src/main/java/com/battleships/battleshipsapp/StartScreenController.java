@@ -8,7 +8,7 @@ import java.io.IOException;
 public class StartScreenController {
     @FXML
     protected void onLoginButtonClick() {
-
+        App.setRoot("login_screen");
     }
 
     @FXML
