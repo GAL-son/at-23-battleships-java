@@ -21,11 +21,6 @@
             <Font size="24.0" />
          </font>
       </Button>
-      <Button fx:id="buttonSettings" layoutX="442.0" layoutY="459.0" mnemonicParsing="false" text="Settings">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Button>
       <Button fx:id="buttonLogOut" alignment="CENTER" layoutX="443.0" layoutY="695.0" mnemonicParsing="false" onAction="#logOut" text="Log out">
          <font>
             <Font size="24.0" />

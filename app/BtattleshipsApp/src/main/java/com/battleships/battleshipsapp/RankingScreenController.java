@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 public class RankingScreenController {
     Stage stage;
+    Integer uid;
     ArrayList<JSONObject> rankingInfo = new ArrayList<>();
 
     public void setStage(Stage stage) {
@@ -30,6 +31,8 @@ public class RankingScreenController {
 
     @FXML
     private VBox rightVBox;
+
+
 
     @FXML
     private void initialize() {
@@ -94,7 +97,13 @@ public class RankingScreenController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("main_menu.fxml"));
         Parent mainMenuScreen = loader.load();
         MainMenuController mainMenuController= loader.getController();
+        mainMenuController.setUid(uid);
         mainMenuController.setStage(stage);
         stage.setScene( new Scene(mainMenuScreen));
+    }
+
+    public void setUid(Integer uid){
+        this.uid = uid;
+        System.out.println(uid);
     }
 }
