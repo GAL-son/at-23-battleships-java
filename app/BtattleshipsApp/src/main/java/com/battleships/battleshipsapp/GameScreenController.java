@@ -7,8 +7,10 @@ import com.battleships.battleshipsapp.model.board.Field;
 import com.battleships.battleshipsapp.model.players.PlayerAi;
 import com.battleships.battleshipsapp.model.ship.Ship;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -273,7 +275,7 @@ public class GameScreenController {
             }
             if (game.gameStateFromServer.getLastx() != null && game.gameStateFromServer.getTurnid() == game.getPlayer1().getId()) {
 
-                if (!((Field) game.getPlayer1().getPlayerBard().fields.get(pom1).get(pom2)).getWasHit()){
+                if (!((Field) game.getPlayer1().getPlayerBard().fields.get(pom1).get(pom2)).getWasHit() && ((Field) (game.getPlayer2().getPlayerBard().fields.get(Integer.valueOf(x)).get(Integer.valueOf(y)))).getWasHit() != true){
                     try {
 
                         hitingProcedure(new Move(game.gameStateFromServer.getLastx(), game.gameStateFromServer.getLasty(), 0), 2);
@@ -281,7 +283,7 @@ public class GameScreenController {
                         throw new RuntimeException(e);
                     }
 
-                    if (((Field) (game.getPlayer2().getPlayerBard().fields.get(Integer.valueOf(x)).get(Integer.valueOf(y)))).getWasHit() != true && !game.gameStateFromServer.isFinished()) {
+                    if ( !game.gameStateFromServer.isFinished()) {
                         shootOnServer(Integer.valueOf(x), Integer.valueOf(y));
                         try {
                             hitingProcedure(new Move(Integer.valueOf(x), Integer.valueOf(y), 0), 1);
@@ -432,14 +434,39 @@ public class GameScreenController {
 
     private void GameEndProcedure(int winner) {
         game.setState(2);
-        if (game.winner == game.getPlayer1().getId())
+        if (game.winner == game.getPlayer1().getId()) {
             System.out.println("gre wygrał gracz: " + 1 + "zajeło mu to " + game.getTurnFull());
+            try {
+                goToMenu(1);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
-        if (game.winner == game.getPlayer2().getId())
+        if (game.winner == game.getPlayer2().getId()) {
             System.out.println("gre wygrał gracz: " + 2 + "zajeło mu to " + game.getTurnFull());
+            try {
+                goToMenu(2);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
 
         // Log.i("koniec", "gre wygrał gracz: " + game.winner + "zajeło mu to " + game.getTurnFull());
+
+    }
+
+    private void goToMenu(int i) throws IOException {
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("endGameScreen.fxml"));
+        Parent end = loader.load();
+        EndGameScrean endGameScrean = loader.getController();
+        endGameScrean.setWin(i);
+        endGameScrean.setStage(stage);
+        endGameScrean.draw();
+        stage.setScene( new Scene(end));
+        //endGameScrean.stageInit(stage);
 
     }
 
