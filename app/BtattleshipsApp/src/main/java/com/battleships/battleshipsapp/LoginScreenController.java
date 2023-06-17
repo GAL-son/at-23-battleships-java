@@ -51,7 +51,6 @@ public class LoginScreenController {
 
     @FXML
     private void onCancelButtonClick() throws IOException {
-        //App.setRoot("start_screen");
         FXMLLoader loader = new FXMLLoader(getClass().getResource("start_screen2.fxml"));
         Parent startScreen = loader.load();
         StartScreen2 startScreen2 = loader.getController();

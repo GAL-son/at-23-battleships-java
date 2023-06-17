@@ -60,6 +60,15 @@ public class MainMenuController {
 
     }
 
+    @FXML
+    private void showRanking() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ranking_screen.fxml"));
+        Parent rankingScreen = loader.load();
+        RankingScreenController rankingScreenController = loader.getController();
+        rankingScreenController.setStage(stage);
+        stage.setScene( new Scene(rankingScreen));
+    }
+
     public void setUid(Integer uid){
         this.uid = uid;
         System.out.println(uid);
