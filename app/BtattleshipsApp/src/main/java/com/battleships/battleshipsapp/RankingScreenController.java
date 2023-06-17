@@ -7,7 +7,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,7 +26,10 @@ public class RankingScreenController {
     }
 
     @FXML
-    private GridPane gridPane;
+    private VBox leftVBox;
+
+    @FXML
+    private VBox rightVBox;
 
     @FXML
     private void initialize() {
@@ -40,9 +43,8 @@ public class RankingScreenController {
             Label nameLabel = new Label(nickname);
             Label scoreLabel = new Label(score.toString());
 
-            nameLabel.setAlignment(Pos.CENTER);
-            scoreLabel.setAlignment(Pos.CENTER);
-            gridPane.addRow(row, nameLabel, scoreLabel);
+            leftVBox.getChildren().add(nameLabel);
+            rightVBox.getChildren().add(scoreLabel);
         }
     }
 

@@ -2,14 +2,35 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <AnchorPane prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.battleships.battleshipsapp.RankingScreenController">
-   <children>
-      <ScrollPane layoutX="0" layoutY="0" prefHeight="350.0" prefWidth="380">
-        <content>
-            <GridPane alignment="CENTER" fx:id="gridPane" hgap="10" vgap="5" />
-        </content>
-      </ScrollPane>
-       <Button layoutX="163.0" layoutY="361.0" onAction="#goBack" text="Powrót" />
-   </children>
+    <children>
+        <ScrollPane layoutX="0" layoutY="0" prefHeight="350.0" prefWidth="380" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="16.0">
+            <content>
+                <GridPane alignment="CENTER" hgap="10" prefHeight="25.0" prefWidth="366.0" vgap="5">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="ALWAYS" />
+                        <ColumnConstraints hgrow="ALWAYS" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints />
+                    </rowConstraints>
+                    <VBox fx:id="leftVBox" alignment="CENTER" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER">
+                        <Label text="name">
+                     <font>
+                        <Font size="16.0" />
+                     </font></Label>
+                    </VBox>
+                    <VBox fx:id="rightVBox" alignment="CENTER" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
+                        <Label text="score">
+                     <font>
+                        <Font size="16.0" />
+                     </font></Label>
+                    </VBox>
+                </GridPane>
+            </content>
+        </ScrollPane>
+        <Button layoutX="163.0" layoutY="361.0" onAction="#goBack" text="Powrót" />
+    </children>
 </AnchorPane>
