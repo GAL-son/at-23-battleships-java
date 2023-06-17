@@ -65,6 +65,7 @@ public class MainMenuController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ranking_screen.fxml"));
         Parent rankingScreen = loader.load();
         RankingScreenController rankingScreenController = loader.getController();
+        rankingScreenController.setUid(uid);
         rankingScreenController.setStage(stage);
         stage.setScene( new Scene(rankingScreen));
     }
