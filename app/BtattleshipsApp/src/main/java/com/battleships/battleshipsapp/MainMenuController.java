@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class MainMenuController {
     Stage stage;
-    Integer uid = null;
+    Integer uid;
 
     public MainMenuController() {
         this.stage = (Stage) App.getScene().getWindow();
@@ -23,10 +23,10 @@ public class MainMenuController {
     @FXML
     private void logOut() throws IOException {
        // App.setRoot("start_screen");
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("start_screen.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("start_screen2.fxml"));
         Parent startScreen = loader.load();
-        StartScreenController startScreenController = loader.getController();
-
+        StartScreen2 startScreen2 = loader.getController();
+        startScreen2.setStage(stage);
         stage.setScene( new Scene(startScreen));
     }
 
@@ -36,7 +36,9 @@ public class MainMenuController {
         Parent setingView = loader.load();
         SetShipsController setShipsController = loader.getController();
         setShipsController.setMode(0);
-        setShipsController.setLocalId(0);
+        //if(uid == null){
+            setShipsController.setLocalId(uid);
+        //}
 
         stage.setScene( new Scene(setingView));
         setShipsController.stageInit(stage);

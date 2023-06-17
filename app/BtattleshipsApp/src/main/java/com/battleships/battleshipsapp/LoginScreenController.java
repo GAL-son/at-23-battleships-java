@@ -19,7 +19,7 @@ public class LoginScreenController {
     private Integer uid;
 
     public LoginScreenController(){
-        this.stage = (Stage) App.getScene().getWindow();
+       this.stage = (Stage) App.getScene().getWindow();
     }
 
     public void setStage(Stage stage) {
@@ -50,8 +50,13 @@ public class LoginScreenController {
     }
 
     @FXML
-    private void onCancelButtonClick(){
+    private void onCancelButtonClick() throws IOException {
         //App.setRoot("start_screen");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("start_screen2.fxml"));
+        Parent startScreen = loader.load();
+        StartScreen2 startScreen2 = loader.getController();
+        startScreen2.setStage(stage);
+        stage.setScene( new Scene(startScreen));
     }
 
     private boolean login(String login, String password){
@@ -103,7 +108,7 @@ public class LoginScreenController {
         Parent mainMenuView = loader.load();
         MainMenuController mainMenuController = loader.getController();
         mainMenuController.setUid(uid);
-
+        mainMenuController.setStage(stage);
         stage.setScene( new Scene(mainMenuView));
     }
 }
