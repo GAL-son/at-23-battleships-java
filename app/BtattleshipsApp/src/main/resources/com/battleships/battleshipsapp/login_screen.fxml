@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.battleships.battleshipsapp.LoginScreenController">
+   <children>
+      <VBox alignment="CENTER" layoutX="379.0" layoutY="452.0" spacing="10">
+
+         <HBox alignment="CENTER" spacing="10">
+            <Button text="Login">
+               <font>
+                  <Font size="24.0" />
+               </font></Button>
+            <Button contentDisplay="CENTER" text="Cancel">
+               <font>
+                  <Font size="24.0" />
+               </font></Button>
+         </HBox>
+
+         <Button text="Create new account">
+            <font>
+               <Font size="24.0" />
+            </font></Button>
+      </VBox>
+      <GridPane alignment="CENTER" layoutX="321.0" layoutY="298.0">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" />
+            <ColumnConstraints hgrow="SOMETIMES" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints vgrow="SOMETIMES" />
+            <RowConstraints vgrow="SOMETIMES" />
+            <RowConstraints vgrow="SOMETIMES" />
+         </rowConstraints>
+         <Label text="Login" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <font>
+               <Font size="24.0" />
+            </font></Label>
+         <TextField id="loginTextField" fx:id="loginField" GridPane.columnIndex="1" GridPane.rowIndex="0">
+            <font>
+               <Font size="24.0" />
+            </font></TextField>
+         <Label text="Password" GridPane.columnIndex="0" GridPane.rowIndex="1">
+            <GridPane.margin>
+               <Insets right="5.0" />
+            </GridPane.margin>
+            <font>
+               <Font size="24.0" />
+            </font></Label>
+         <PasswordField id="passwordField" fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <font>
+               <Font size="24.0" />
+            </font></PasswordField>
+      </GridPane>
+   </children>
+</AnchorPane>
