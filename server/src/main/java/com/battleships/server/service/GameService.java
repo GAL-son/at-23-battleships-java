@@ -96,7 +96,6 @@ public class GameService {
         
         // Push Game to list
         Game game = new Game(maxid, 10);
-        addGame(game);
         
         // Add Players
         try {
@@ -108,7 +107,7 @@ public class GameService {
             // TODO Auto-generated catch block
             System.out.println("Failed adding player");
             e.printStackTrace();
-            //return null;
+            return null;
         }
         
         try {
@@ -119,10 +118,11 @@ public class GameService {
             // TODO Auto-generated catch block
             System.out.println("Failed adding opponent");
             e.printStackTrace();
-           // return null;
+            return null;
         }
-
+        
         /* DEBUG */ System.out.println(userQueue);
+        addGame(game);
         
         return game;
     }
