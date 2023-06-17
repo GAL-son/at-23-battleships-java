@@ -528,6 +528,7 @@ public class GameScreenController {
         Parent end = loader.load();
         EndGameScrean endGameScrean = loader.getController();
         endGameScrean.setWin(i);
+        endGameScrean.setUid(this.game.getPlayer1().getId());
         endGameScrean.setStage(stage);
         endGameScrean.draw();
         stage.setScene( new Scene(end));

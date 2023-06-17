@@ -15,8 +15,15 @@ public class EndGameScrean {
     Stage stage;
     private Integer win;
 
+    Integer uid;
+
+
     @FXML
     Label winnerLabel;
+
+    public void setUid(Integer uid) {
+        this.uid = uid;
+    }
 
     @FXML
     public void goToMenu() throws IOException {
@@ -27,6 +34,7 @@ public class EndGameScrean {
         //  mainMenuController.setMode(1);
         //  mainMenuController.setLocalId(9);//w przyszłości to musi byc uid zalogowanego gracza
         mainMenuController.setStage(stage);
+        mainMenuController.setUid(this.uid);
         stage.setScene(new Scene(menuView));
         // setShipsController.stageInit(stage);
 

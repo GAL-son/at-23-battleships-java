@@ -117,6 +117,7 @@ public class GameService {
         if(!playersInGame.containsValue(game)) {
             activeGames.remove(game);
         }
+        System.out.println(activeGames);
     }
 
     // public boolean makeMove(int gid, User user, Move move){
