@@ -59,6 +59,15 @@ public class LoginScreenController {
         stage.setScene( new Scene(startScreen));
     }
 
+    @FXML
+    private void onRegisterButtonClick() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("register_screen.fxml"));
+        Parent registerScreen = loader.load();
+        RegisterScreenController registerScreenController = loader.getController();
+        registerScreenController.setStage(stage);
+        stage.setScene( new Scene(registerScreen));
+    }
+
     private boolean login(String login, String password){
         Connection connection = new Connection();
         RequestBody body = connection.playerRequestBody(login, password);

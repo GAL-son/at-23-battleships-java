@@ -20,7 +20,7 @@
                </font></Button>
          </HBox>
 
-         <Button text="Create new account">
+         <Button text="Create new account" onAction="#onRegisterButtonClick">
             <font>
                <Font size="24.0" />
             </font></Button>
