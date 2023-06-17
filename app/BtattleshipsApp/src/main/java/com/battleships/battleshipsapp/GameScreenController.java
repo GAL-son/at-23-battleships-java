@@ -15,12 +15,15 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import okhttp3.RequestBody;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameScreenController {
     private static final int BOARD_SIZE = 10;
@@ -32,7 +35,7 @@ public class GameScreenController {
 
     HashMap<String, Node> labelsPlayer1 = new HashMap<String, Node>();
     HashMap<String, Node> labelsPlayer2 = new HashMap<String, Node>();
-    HashMap<String, Node> others= new HashMap<String, Node>();
+    HashMap<String, Node> others = new HashMap<String, Node>();
 
     public GameScreenController(Stage primaryStage) {
         stage = primaryStage;
@@ -73,7 +76,7 @@ public class GameScreenController {
         HBox topBox = new HBox(turnLabel);
         topBox.setAlignment(Pos.CENTER);
 
-        this.others.put("turn",turnLabel);
+        this.others.put("turn", turnLabel);
 
 
         // Player Ships Labels
@@ -137,6 +140,15 @@ public class GameScreenController {
         Scene scene = new Scene(mainLayout, 1050, 800);
         stage.setScene(scene);
         drawBoardPlacing();
+        if (game.getType() == 1) {
+            if (game.getTurn() == 0) {
+                if (game.getPlayer1().getId() == game.gameStateFromServer.getTurnid()) ;
+                {
+                    game.getPlayer1().setMoove_token(true);
+                }
+            }
+        }
+
     }
 
     private void setStateFromSever() {
@@ -151,7 +163,7 @@ public class GameScreenController {
         new Thread(() -> {
             try {
                 String response = conn.get(Endpoints.GAME_STATE.getEndpoint(), map);
-                System.out.println("TheResponseOfStateFetch:"+ response);
+                System.out.println("TheResponseOfStateFetch:" + response);
                 JSONObject json = Connection.stringToJson(response);
 
 
@@ -221,12 +233,11 @@ public class GameScreenController {
         System.out.println("x" + x);
         System.out.println("y" + y);
 
-        if (this.game.getType()==0)//is singleplayer
+        if (this.game.getType() == 0)//is singleplayer
         {
-            if(  ((Field)(game.getPlayer2().getPlayerBard().fields.get(Integer.valueOf(x)).get(Integer.valueOf(y)))).getWasHit() != true && this.game.getState()<2  && game.getTurn() % 2 == 0)
-            {
+            if (((Field) (game.getPlayer2().getPlayerBard().fields.get(Integer.valueOf(x)).get(Integer.valueOf(y)))).getWasHit() != true && this.game.getState() < 2 && game.getTurn() % 2 == 0) {
                 try {
-                    hitingProcedure(new Move(Integer.valueOf(x),Integer.valueOf(y), 0), 1);
+                    hitingProcedure(new Move(Integer.valueOf(x), Integer.valueOf(y), 0), 1);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -243,7 +254,7 @@ public class GameScreenController {
                     //Log.i("aha", "ai oddalo strzal w to smao miejsce");
                 }
 
-            }else {
+            } else {
                 if (game.getState() == 2) {
                     System.out.println("game ended");
                     Label turn = (Label) this.others.get("turn");
@@ -252,26 +263,114 @@ public class GameScreenController {
             }
         }
 
-        if (this.game.getType()==1)//is multiplayer // this is bad, need for testing tho
-        {
-            if( ((Field)(game.getPlayer2().getPlayerBard().fields.get(Integer.valueOf(x)).get(Integer.valueOf(y)))).getWasHit() != true && this.game.getState()<2  /*&& game.getTurn() % 2 == 0*/)
+        if (this.game.getType() == 1) {
+            Label turn=(Label) this.others.get("turn");
+            setStateFromSever();
+            Integer pom1 = null, pom2=null;
+            if(game.gameStateFromServer.getLastx() != null) {
+                pom1 = game.gameStateFromServer.getLastx();
+                pom2 = game.gameStateFromServer.getLasty();
+            }
+            if (game.gameStateFromServer.getLastx() != null && game.gameStateFromServer.getTurnid() == game.getPlayer1().getId()) {
+
+                if (!((Field) game.getPlayer1().getPlayerBard().fields.get(pom1).get(pom2)).getWasHit()){
+                    try {
+
+                        hitingProcedure(new Move(game.gameStateFromServer.getLastx(), game.gameStateFromServer.getLasty(), 0), 2);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    if (((Field) (game.getPlayer2().getPlayerBard().fields.get(Integer.valueOf(x)).get(Integer.valueOf(y)))).getWasHit() != true && !game.gameStateFromServer.isFinished()) {
+                        shootOnServer(Integer.valueOf(x), Integer.valueOf(y));
+                        try {
+                            hitingProcedure(new Move(Integer.valueOf(x), Integer.valueOf(y), 0), 1);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                        setStateFromSever();
+                        System.out.println("InGameStateDownloadTest" + game.gameStateFromServer.toString());
+                        drawBoardPlacing();//debug
+                    }else {
+                        if (game.getState() == 2) {
+                            System.out.println("game alredy ended");
+                            turn.setText("game ended");
+                        }
+                    }
+
+
+                }
+
+            } else if (game.gameStateFromServer.getLastx() == null && game.gameStateFromServer.getTurnid() == game.getPlayer1().getId()){
+                if (((Field) (game.getPlayer2().getPlayerBard().fields.get(Integer.valueOf(x)).get(Integer.valueOf(y)))).getWasHit() != true && !game.gameStateFromServer.isFinished()) {
+                    shootOnServer(Integer.valueOf(x), Integer.valueOf(y));
+                    try {
+                        hitingProcedure(new Move(Integer.valueOf(x), Integer.valueOf(y), 0), 1);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                    setStateFromSever();
+                    System.out.println("InGameStateDownloadTest" + game.gameStateFromServer.toString());
+                    drawBoardPlacing();//debug
+                }else {
+                    if (game.getState() == 2) {
+                        System.out.println("game alredy ended");
+                        turn.setText("game ended");
+                    }
+                }
+
+            }else if ( game.gameStateFromServer.getTurnid() == game.getPlayer2().getId())
             {
-                try {
-                    hitingProcedure(new Move(Integer.valueOf(x),Integer.valueOf(y), 0), 1);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
+                setStateFromSever();
 
-            }else {
-                if (game.getState() == 2) {
-                    System.out.println("game ended");
-                    Label turn = (Label) this.others.get("turn");
-                    turn.setText("game ended");
-                }
             }
-        }
+
+
+        }//koniec bloku multiplayer
 
         drawBoardPlacing();
+    }
+
+    private void shootOnServer(Integer x, Integer y) {
+
+        Connection connection = new Connection();
+
+        RequestBody body = connection.moveBody(game.getPlayer1().getId(), x, y);
+        AtomicBoolean didHit = new AtomicBoolean(false);
+        Object lock = new Object();
+        new Thread(() -> {
+            try {
+                String response = connection.post(Endpoints.GAME_MOVE.getEndpoint(), body);
+                System.out.println("TheResponseOfMove:" + response);
+
+
+                System.out.println("the response " + response);
+                if (response.equals("false")) {
+                    System.out.println("status " + response);
+                } else {
+                    if (response.equals("true")) {
+                        didHit.set(true);
+                    }
+
+
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } finally {
+                synchronized (lock) {
+                    lock.notify();
+                }
+            }
+        }).start();
+        synchronized (lock) {
+            try {
+                lock.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+
     }
 
     private void hitingProcedure(Move move, int player) {
@@ -288,9 +387,7 @@ public class GameScreenController {
         countHP();
         game.nextTurn();
         Label turn = (Label) this.others.get("turn");
-        turn.setText("tura: "+this.game.getTurn());
-
-
+        turn.setText("tura: " + this.game.getTurn());
 
 
     }
@@ -367,14 +464,12 @@ public class GameScreenController {
                 button = this.butonMapPlayer1.get(String.valueOf(x) + String.valueOf(y));
                 if (((Field) (game.getPlayer1().getPlayerBard().fields.get(y).get(x))).isOccupied()) {
                     button.setStyle("-fx-background-color: " + toHex(Color.GREEN) + ";" + "-fx-border-color: " + toHex(Color.BLACK) + ";");
-                    if(  ((Field) (game.getPlayer1().getPlayerBard().fields.get(y).get(x))).getWasHit())
-                    {
+                    if (((Field) (game.getPlayer1().getPlayerBard().fields.get(y).get(x))).getWasHit()) {
                         button.setStyle("-fx-background-color: " + toHex(Color.RED) + ";" + "-fx-border-color: " + toHex(Color.BLACK) + ";");
                     }
                 } else {
                     button.setStyle("-fx-background-color: " + toHex(Color.WHITE) + ";" + "-fx-border-color: " + toHex(Color.BLACK) + ";");
-                    if(  ((Field) (game.getPlayer1().getPlayerBard().fields.get(y).get(x))).getWasHit())
-                    {
+                    if (((Field) (game.getPlayer1().getPlayerBard().fields.get(y).get(x))).getWasHit()) {
                         button.setStyle("-fx-background-color: " + toHex(Color.GRAY) + ";" + "-fx-border-color: " + toHex(Color.BLACK) + ";");
                     }
                 }
@@ -388,9 +483,7 @@ public class GameScreenController {
 
                     if (((Field) (game.getPlayer2().getPlayerBard().fields.get(y).get(x))).isOccupied()) {
                         button.setStyle("-fx-background-color: " + toHex(Color.RED) + ";" + "-fx-border-color: " + toHex(Color.BLACK) + ";");
-                    }
-                    else
-                    {
+                    } else {
                         button.setStyle("-fx-background-color: " + toHex(Color.GRAY) + ";" + "-fx-border-color: " + toHex(Color.BLACK) + ";");
                     }
                 } else {
@@ -406,8 +499,8 @@ public class GameScreenController {
         }
 
         //ustawienie ilosci statków do postawienia
-        Label turn =(Label) others.get("turn");
-        turn.setText("tura:"+ String.valueOf(this.game.getTurnFull()));
+        Label turn = (Label) others.get("turn");
+        turn.setText("tura:" + String.valueOf(this.game.getTurnFull()));
         updateCountShips();
 
     }
