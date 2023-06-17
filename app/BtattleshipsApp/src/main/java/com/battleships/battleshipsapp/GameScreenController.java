@@ -1,6 +1,7 @@
 package com.battleships.battleshipsapp;
 
 import com.battleships.battleshipsapp.model.Game;
+import com.battleships.battleshipsapp.model.GameStateFromServer;
 import com.battleships.battleshipsapp.model.Move;
 import com.battleships.battleshipsapp.model.board.Field;
 import com.battleships.battleshipsapp.model.players.PlayerAi;
@@ -14,9 +15,12 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class GameScreenController {
     private static final int BOARD_SIZE = 10;
@@ -60,6 +64,9 @@ public class GameScreenController {
     public void initializeUI() {
 
         System.out.println(this.game.getPlayer1().getId());
+
+        if (game.getType() == 1)
+            setStateFromSever();
         // Top Label
         Label turnLabel = new Label("Tura: 1");
         turnLabel.setStyle("-fx-font-size: 20;");
@@ -132,6 +139,54 @@ public class GameScreenController {
         drawBoardPlacing();
     }
 
+    private void setStateFromSever() {
+        Connection conn = new Connection();
+
+        Map<String, String> map = new HashMap<String, String>() {{
+            put("uid", String.valueOf(game.getPlayer1().getId()));
+        }};
+
+
+        Object lock = new Object();
+        new Thread(() -> {
+            try {
+                String response = conn.get(Endpoints.GAME_STATE.getEndpoint(), map);
+                System.out.println("TheResponseOfStateFetch:"+ response);
+                JSONObject json = Connection.stringToJson(response);
+
+
+                System.out.println("the response" + response);
+                if (json.has("status")) {
+                    System.out.println("status" + response);
+                } else {
+
+                    try {
+                        game.gameStateFromServer = GameStateFromServer.getState(json);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+
+            } finally {
+                synchronized (lock) {
+                    lock.notify();
+                }
+            }
+
+        }).start();
+
+        synchronized (lock) {
+            try {
+                lock.wait();
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private GridPane createBoard(int p) {
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
@@ -168,7 +223,7 @@ public class GameScreenController {
 
         if (this.game.getType()==0)//is singleplayer
         {
-            if(  ((Field)(game.getPlayer2().getPlayerBard().fields.get(Integer.valueOf(x)).get(Integer.valueOf(y)))).getWasHit() != true && this.game.getState()<2  /*&& game.getTurn() % 2 == 0*/)
+            if(  ((Field)(game.getPlayer2().getPlayerBard().fields.get(Integer.valueOf(x)).get(Integer.valueOf(y)))).getWasHit() != true && this.game.getState()<2  && game.getTurn() % 2 == 0)
             {
                 try {
                     hitingProcedure(new Move(Integer.valueOf(x),Integer.valueOf(y), 0), 1);
@@ -195,11 +250,25 @@ public class GameScreenController {
                     turn.setText("game ended");
                 }
             }
+        }
 
+        if (this.game.getType()==1)//is multiplayer // this is bad, need for testing tho
+        {
+            if( ((Field)(game.getPlayer2().getPlayerBard().fields.get(Integer.valueOf(x)).get(Integer.valueOf(y)))).getWasHit() != true && this.game.getState()<2  /*&& game.getTurn() % 2 == 0*/)
+            {
+                try {
+                    hitingProcedure(new Move(Integer.valueOf(x),Integer.valueOf(y), 0), 1);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
 
-
-
-
+            }else {
+                if (game.getState() == 2) {
+                    System.out.println("game ended");
+                    Label turn = (Label) this.others.get("turn");
+                    turn.setText("game ended");
+                }
+            }
         }
 
         drawBoardPlacing();

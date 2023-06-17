@@ -4,15 +4,14 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-
 <AnchorPane prefHeight="800" prefWidth="1000" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.battleships.battleshipsapp.MainMenuController">
    <children>
-      <Button fx:id="buttonPlaySingle" layoutX="396.0" layoutY="230.0" mnemonicParsing="false" text="Play singleplayer" onAction="#playSinglePlayer">
+      <Button fx:id="buttonPlaySingle" layoutX="396.0" layoutY="230.0" mnemonicParsing="false" onAction="#playSinglePlayer" text="Play singleplayer">
          <font>
             <Font size="24.0" />
          </font>
       </Button>
-      <Button fx:id="buttonPlayMulti" layoutX="400.0" layoutY="308.0" mnemonicParsing="false" text="Play multiplayer">
+      <Button fx:id="buttonPlayMulti" layoutX="400.0" layoutY="308.0" mnemonicParsing="false" onAction="#playMultiPlayer" text="Play multiplayer">
          <font>
             <Font size="24.0" />
          </font>
@@ -27,7 +26,7 @@
             <Font size="24.0" />
          </font>
       </Button>
-      <Button fx:id="buttonLogOut" alignment="CENTER" layoutX="443.0" layoutY="695.0" mnemonicParsing="false" text="Log out" onAction="#logOut">
+      <Button fx:id="buttonLogOut" alignment="CENTER" layoutX="443.0" layoutY="695.0" mnemonicParsing="false" onAction="#logOut" text="Log out">
          <font>
             <Font size="24.0" />
          </font>
