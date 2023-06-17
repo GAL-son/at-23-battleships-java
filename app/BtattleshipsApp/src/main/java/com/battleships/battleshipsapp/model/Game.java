@@ -1,3 +1,4 @@
+
 package com.battleships.battleshipsapp.model;
 
 
@@ -13,6 +14,10 @@ import com.battleships.battleshipsapp.model.board.Board;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * Represents Instance of Battleships Game,
+ * Implements Serializable for transfering object between viwes
+ */
 public class Game implements Serializable {
 
     private int id;
@@ -31,11 +36,20 @@ public class Game implements Serializable {
 
     public int winner = 0;
 
+    /**
+     * Increments value of turn, representing moving to the next turn
+     */
     public void nextTurn() {
         turn = (turn + 1);
     }
 
-
+    /**
+     * Constructor Creating game object
+     *
+     * @param id identificator of a game instance
+     * @param type type of the gamne in numeric: 0 for with AI, 1 for multiplayer
+     * @throws Exception throws exception if the  game type does not mach any possible in game
+     */
     public Game(int id, int type) throws Exception {
         //seting stater to in progres, ship placing
         this.state = 0;
@@ -83,19 +97,27 @@ public class Game implements Serializable {
 
     }
 
-
+    /**
+     * Method for Placing ships, unused in the current version
+     *
+     * @param move Object of type move containing locatol and alignment of ship to b placed
+     * @param player number identifying witch player in game took this action
+     */
     public void getMove(Move move, int player) {
         if (this.state == 0) {
           //  Log.i("debug", "placing ship for player" + String.valueOf(player));
             place_ship(move, player, 0);
         }
         if (this.state == 1) {
-
         }
-
     }
 
-
+    /**
+     *  Method  hiting specified field on specified player's board
+     *  also takes care of shooting fields bordering  destroyed ship
+     * @param move object of type move specifing where to hit
+     * @param player  number identifying witch player in game took this action
+     */
     public void hitField(Move move, int player) {
         Player atacked_player;
         if (player == 1)
@@ -142,41 +164,6 @@ public class Game implements Serializable {
                         if ((((Field) atacked_player.getPlayerBard().fields.get(x).get(y + 1)).isOccupied() != true))
                             ((Field) atacked_player.getPlayerBard().fields.get(x).get(y + 1)).hitField();
                     }
-
-
-//                    if ( x+1 < 10 && x >= 0 && y < 10 && y >= 0) {
-//                        if((((Field) atacked_player.getPlayerBard().fields.get(x+1).get(y)).isOccupied() != true))
-//                        ((Field) atacked_player.getPlayerBard().fields.get(x+1).get(y)).hitField();
-//                    }
-//                    if (((Field) atacked_player.getPlayerBard().fields.get(a.get(0)).get(a.get(1) + 1)).isOccupied() != true && a.get(0) < 10 && a.get(0) >= 0 && a.get(1) + 1 < 10 && a.get(1) + 1 >= 0) {
-//                        ((Field) atacked_player.getPlayerBard().fields.get(a.get(0)).get(a.get(1) + 1)).hitField();
-//                    }
-//                    if (((Field) atacked_player.getPlayerBard().fields.get(a.get(0) - 1).get(a.get(1))).isOccupied() != true && a.get(0) - 1 < 10 && a.get(0) - 1 >= 0 && a.get(1) < 10 && a.get(1) >= 0) {
-//                        ((Field) atacked_player.getPlayerBard().fields.get(a.get(0) - 1).get(a.get(1))).hitField();
-//                    }
-//                    if (((Field) atacked_player.getPlayerBard().fields.get(a.get(0)).get(a.get(1) - 1)).isOccupied() != true && a.get(0) < 10 && a.get(0) >= 0 && a.get(1) - 1 < 10 && a.get(1) - 1 >= 0) {
-//                        ((Field) atacked_player.getPlayerBard().fields.get(a.get(0)).get(a.get(1) - 1)).hitField();
-//                    }
-////                //skosy
-////                if(((Field) atacked_player.getPlayerBard().fields.get(a.get(0)-1).get(a.get(1)-1)).isOccupied()!=true&&a.get(0)-1<10&&a.get(0)-1>=0&&a.get(1)-1<10&&a.get(1)-1>=0)
-////                {
-////                    ((Field) atacked_player.getPlayerBard().fields.get(a.get(0)-1).get(a.get(1)-1)).hitField();
-////                }
-////                if(((Field) atacked_player.getPlayerBard().fields.get(a.get(0)-1).get(a.get(1)+1)).isOccupied()!=true&&a.get(0)-1<10&&a.get(0)-1>=0&&a.get(1)+1<10&&a.get(1)+1>=0)
-////                {
-////                    ((Field) atacked_player.getPlayerBard().fields.get(a.get(0)-1).get(a.get(1)+1)).hitField();
-////                }
-////
-////                if(((Field) atacked_player.getPlayerBard().fields.get(a.get(0)+1).get(a.get(1)+1)).isOccupied()!=true&&a.get(0)+1<10&&a.get(0)+1>=0&&a.get(1)+1<10&&a.get(1)+1>=0)
-////                {
-////                    ((Field) atacked_player.getPlayerBard().fields.get(a.get(0)+1).get(a.get(1)+1)).hitField();
-////                }
-////                if(((Field) atacked_player.getPlayerBard().fields.get(a.get(0)+1).get(a.get(1)-1)).isOccupied()!=true&&a.get(0)+1<10&&a.get(0)+1>=0&&a.get(1)-1<10&&a.get(1)-1>=0)
-////                {
-////                    ((Field) atacked_player.getPlayerBard().fields.get(a.get(0)+1).get(a.get(1)-1)).hitField();
-////                }
-
-
                 }
             }
         }
@@ -190,8 +177,14 @@ public class Game implements Serializable {
 
     }
 
+    /**
+     * Method for placing ships on the board.
+     *It also  takes care of binding Ships to fields, and checking if ship can be placed on specified location
+     * @param move move object of type move specifying where to place the ship
+     * @param player number identifying witch player in game took this action
+     * @param aline number determining if ship is to be placed vertically or horizontally
+     */
     public void place_ship(Move move, int player, int aline) {
-        //WYMYUŚLIĆ SKĄD MA BYĆ BRANY ALIGNMENT
 
         //wybiramy gracza ktory ruszyl
         Player currentPlayer;
@@ -407,55 +400,108 @@ public class Game implements Serializable {
 
     }
 
-
-    public void gameLoop() {
-
-    }
-
+    /**
+     * Retrieves vaule of game's id
+     * @return game's id
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Retrieves vaule of game's state
+     * 0 for not yet started,
+     * 1 for in  progress,
+     * 2 for ended,
+     * @return game's state
+     */
     public int getState() {
         return state;
     }
 
+    /**
+     * Retrieves vaule of game's type
+     * 0 for single-player,
+     * 1 for multiplayer,
+
+     * @return game's type
+     */
     public int getType() {
         return type;
     }
 
+    /**
+     * Retrieves rest of dividing game's turn by 2, to specify whos of the 2 player turn it is
+     * @return (game's turn % 2)
+     */
     public int getTurn() {
         return turn % 2;
     }
-
+    /**
+     * Retrieves value of game's turn,
+     * @return game's turn
+     */
     public int getTurnFull() {
         return turn;
     }
 
+    /**
+     * sets id of a game
+     * @param id  id of a game
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * sets State of a game
+     * 0 for not yet started,
+     * 1 for in  progress,
+     * 2 for ended,
+     * @param state state of the game
+     */
     public void setState(int state) {
         this.state = state;
     }
 
+    /**
+     * sets type of a game
+     * 0 for single-player,
+     * 1 for multiplayer,
+     * @param type state of the game
+     */
     public void setType(int type) {
         this.type = type;
     }
 
+    /**
+     * method for manually setting turn
+     * @param turn game's turn
+     */
     public void setTurn(int turn) {
         this.turn = turn;
     }
 
+    /**Retrieves object representing player 1 in game, player 1 is always the local player
+     *
+     * @return object representing player1
+     */
     public Player getPlayer1() {
         return player1;
     }
-
+    /**Retrieves object representing player 2 in game, player 2 is either remote player or an AI opponent
+     *
+     * @return object representing player2
+     */
     public Player getPlayer2() {
         return player2;
     }
 
+    /**
+     * Method for counting how many ships of each size player has still not placed
+     * @param a an array table that  gets its element occurrences counted, in this  method it is typicaly the array of ship sizes
+     * @return histogram  - an array containing number of occurrences of each value in parameter array
+     */
     public static ArrayList<Integer> histogram(ArrayList<Integer> a) {
         ArrayList<Integer> histogram = new ArrayList<>();
         for (int n = 0; n < 4; n++) {
@@ -469,6 +515,12 @@ public class Game implements Serializable {
         return histogram;
     }
 
+
+    /**
+     * Method for counting how many ships of each size player still has (were not destroyed)
+     * @param a an array table that  gets its element occurrences counted, in this  method it is typically the array of ships of a player
+     * @return histogram  - an array containing number of occurrences of each value in parameter array
+     */
     public static ArrayList<Integer> histogramInGame(ArrayList<Ship> a) {
         ArrayList<Integer> histogram = new ArrayList<>();
         for (int n = 0; n < 4; n++) {

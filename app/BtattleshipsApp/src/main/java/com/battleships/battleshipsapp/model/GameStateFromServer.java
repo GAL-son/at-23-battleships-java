@@ -1,12 +1,15 @@
 package com.battleships.battleshipsapp.model;
 
-
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * Represents the game state received from the server.
+ */
 public class GameStateFromServer {
+
+
     private int turnid;
     private int gid;
 
@@ -19,6 +22,12 @@ public class GameStateFromServer {
 
     private int lastShootingUserID;
 
+
+    /**
+     * Returns the ID of the last shooting user.
+     *
+     * @return The ID of the last shooting user.
+     */
     public int getLastShootingUserID() {
         return lastShootingUserID;
     }
@@ -41,10 +50,19 @@ public class GameStateFromServer {
         return playerLogin;
     }
 
+    /**
+     * Returns the  X coordinate of the  last move made .
+     *
+     * @return the  X coordinate of the  last move made.
+     */
     public Integer getLastx() {
         return lastx;
     }
-
+    /**
+     * Returns the  Y coordinate of the  last move made .
+     *
+     * @return the  Y coordinate of the  last move made.
+     */
     public Integer getLasty() {
         return lasty;
     }
@@ -52,73 +70,136 @@ public class GameStateFromServer {
     private boolean isStarted;
     private boolean isFinished;
 
+    /**
+     * Returns the ID of player that has turn at the moment.
+     *
+     * @return The turn ID.
+     */
     public int getTurnid() {
         return turnid;
     }
 
+
+    /**
+     * Returns the ID of the game, as on server.
+     *
+     * @return The game ID on server.
+     */
     public int getGid() {
         return gid;
     }
 
+    /**
+     * Returns the opponent's score.
+     *
+     * @return The opponent's score.
+     */
     public int getOponentScore() {
         return oponentScore;
     }
-
+    /**
+     * Returns the opponent's login name.
+     *
+     * @return The opponent's login name.
+     */
     public String getOponentLogin() {
         return oponentLogin;
     }
 
+    /**
+     * Returns  local's player's score.
+     *
+     * @return local's player's score.
+     */
     public int getPlayerScore() {
         return playerScore;
     }
 
+    /**
+     * Returns the player's login name.
+     *
+     * @return The player's login name.
+     */
     public String playerLogin() {
         return playerLogin;
     }
 
+    /**
+     * Returns whether the game has started.
+     *
+     * @return true if the game has started, false otherwise.
+     */
     public boolean isStarted() {
         return isStarted;
     }
-
+    /**
+     * Returns whether the game has finished.
+     *
+     * @return true if the game has finished, false otherwise.
+     */
     public boolean isFinished() {
         return isFinished;
     }
 
-    public void setTurnid(int turnid) {
-        this.turnid = turnid;
-    }
 
-    public void setGid(int gid) {
-        this.gid = gid;
-    }
 
+
+    /**
+     * Sets the opponent's score.
+     *
+     * @param oponentScore The opponent's score to set.
+     */
     public void setOponentScore(int oponentScore) {
         this.oponentScore = oponentScore;
     }
-
+    /**
+     * Sets the opponent's score.
+     *
+     * @param oponentLogin The opponent's score to set.
+     */
     public void setOponentLogin(String oponentLogin) {
         this.oponentLogin = oponentLogin;
     }
 
+    /**
+     * Sets the  local players's score.
+     *
+     * @param playerScore The opponent's score to set.
+     */
     public void setPlayerScore(int playerScore) {
         this.playerScore = playerScore;
     }
 
-    public void playerLogin(String login) {
-        this.playerLogin = login;
-    }
-
+    /**
+     * Sets boolean value saying if game is started
+     *
+     * @param started true, or false depending on what
+     */
     public void setStarted(boolean started) {
         isStarted = started;
     }
-
+    /**
+     * Sets boolean value saying if game is Finished
+     *
+     * @param finished true if game is Finished, false if not
+     */
     public void setFinished(boolean finished) {
         isFinished = finished;
     }
+
+    /**
+     * Sets id  of the lats shooting player
+     *
+     * @param lastShootingUserID Id  of player
+     */
     public void setLastShootingUserID(int lastShootingUserID) {
         this.lastShootingUserID = lastShootingUserID;
     }
 
+    /**
+     *  Method to parse state of an  object to String in a readable format
+     * @return String representing state of the object
+     */
     @Override
     public String toString() {
         return "GameStateFromServer{" +
@@ -136,10 +217,19 @@ public class GameStateFromServer {
                 '}';
     }
 
+    /**
+     * Empty Constructior  for creating empty Objects
+     */
     public GameStateFromServer() {
 
     }
 
+    /**
+     * Static Function to Read data writen in Json Format and  to set Objects atributes to coresponding values, returns  object of  a type {@code  GameDateFromServer}
+     * @param state JSONObject with the staate of a game, recived from server
+     * @return   object of a type {@code  GameDateFromServer}, containing state of a game
+     * @throws JSONException
+     */
     static public GameStateFromServer getState(JSONObject state) throws JSONException {
 
         GameStateFromServer tmp1 = new GameStateFromServer();
@@ -168,7 +258,4 @@ public class GameStateFromServer {
 
         return tmp1;
     }
-
-
-
 }

@@ -30,6 +30,10 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Class acting as a controller of  a View that is used to set Ships  on board, and join game of the right type.
+ * Contains methods concerning server connection, ad utilities needed for presenting Game state to player
+ */
 public class SetShipsController {
     private static final int BOARD_SIZE = 10;
     private Stage stage;
@@ -43,36 +47,62 @@ public class SetShipsController {
     HashMap<String,Button> butonMap =new HashMap<String,Button>();
     HashMap<String,Node> AdditionalELMap =new HashMap<String,Node>();
 
+    /**
+     * Constructior of  a class that sets stage from  a parameter
+     * @param stage  that is used to  transfer between Views
+     */
     public SetShipsController(Stage stage) {
         this.stage = stage;
         initializeUI();
 
     }
+
+    /**
+     * Empty Constructor used for loading Controller class
+     */
     public SetShipsController() {
 
 
     }
+
+    /**
+     * public  method used to call fucntion {@code initaliseUI()} when loading this Controller
+     * @param primaryStage
+     */
     public void stageInit(Stage primaryStage) {
         stage = primaryStage;
         initializeUI();
         stage.show();
     }
 
+    /**
+     * Method to cyclically change alignment beetwen values 1 and  0, used to determine alignment of placed Ship
+     */
     private void changeAlignment() {
         this.alignemnet=(alignemnet+1)%2;
     }
 
+    /**
+     * method used to set  mode in instance of this Class. Used to distinguish between single and multiplayer
+     * @param mode  0 for single-player, 1 for multiplayer
+     */
     public void setMode(Integer mode) {
         this.mode=mode;
         System.out.println("wybrano tryb:"+ mode);
     }
-
+    /**
+     * method used to set  ID of a local player
+     * @param uid value of local player's id
+     */
     public void setLocalId(Integer uid) {
         this.local_uid=uid;
         System.out.println("polaczony gracz o id : "+ uid);
     }
 
-
+    /**
+     * method used to Define elements on the View
+     * defines: board, buttons and ship counters
+     */
     private void initializeUI() {
 
        createGame();
@@ -148,6 +178,11 @@ public class SetShipsController {
         stage.show();
     }
 
+
+    /**
+     * Method to clear all ships already placed on players board
+     * used to place all from the beginning
+     */
     private void clearBoard() {
 
         for (int i = 0; i < 10; i++) {
@@ -169,6 +204,9 @@ public class SetShipsController {
         updateCountShips();//chaneg
     }
 
+    /**
+     * Method to set labels acting as a specific sized ships counters to vales representing ships not yet placed by player
+     */
     private void updateCountShips() {
         ArrayList<Integer> a = Game.histogram(game_this.getPlayer1().shipsSizes);
         a = Game.histogram(game_this.getPlayer1().shipsSizes);
@@ -185,6 +223,9 @@ public class SetShipsController {
 
     }
 
+    /**
+     * Method to create instance of game that is used in  the whole process of playing game
+     */
     private void createGame() {
         try {
             Game game = new Game(1, this.mode);
@@ -205,6 +246,10 @@ public class SetShipsController {
         }
     }
 
+    /**
+     * Method randomly placing ships on enemy board, used to set ships in singleplayer against AI
+     * @throws Exception
+     */
     private void vsAiProcedure() throws Exception {
 
         game_this.place_ship(new Move(0, 0, 0), 2, 1);
@@ -219,6 +264,11 @@ public class SetShipsController {
         }
     }
 
+
+    /**
+     * method  that aplies styles to board grid so that it represents  the real state of board.
+     *
+     */
     private void drawBoardPlacing() {
         Button button;
         System.out.println("board drawn");
@@ -245,16 +295,19 @@ public class SetShipsController {
         Label label3=(Label) this.AdditionalELMap.get("shipCount3");
         Label label2=(Label) this.AdditionalELMap.get("shipCount2");
         Label label1=(Label) this.AdditionalELMap.get("shipCount1");
-        label4.setText("Pierdol");
-        label3.setText("sie");
-        label2.setText("rozuimiesz");
-        label1.setText("?");
+
 
         //ustawienie ilosci statków do postawienia
         updateCountShips();
 
     }
 
+    /**
+     *  Method creating grid of a board that is acting as a board we play a game on
+     *  aplies method handling clicks to the board elements
+     * @return gridPane with button elements that are a fields on a board
+     *
+     */
     private GridPane createBoard() {
         GridPane gridPane = new GridPane();
 
@@ -273,6 +326,11 @@ public class SetShipsController {
         return gridPane;
     }
 
+    /**
+     * Method  used to handle clicks on the buttons constructing board
+     * clicking on a specific button wil place a ship on it
+     * @param button that was clicked on
+     */
     private void handleButtonClick(Button button) {
         String id = getButtonId(button);
         System.out.println("Clicked button ID: " + id);
@@ -293,10 +351,20 @@ public class SetShipsController {
         drawBoardPlacing();
     }
 
+    /**
+     * method to gaet a hex value of a color with # at the beginning
+     * @param color Color that we want  to use
+     * @return hex vale if form of string describing specified in parameter color
+     */
     private String toHex(Color color) {
         return "#" + color.toString().substring(2, 8);
     }
 
+    /**
+     * method resolving button to the id it was given on creation
+     * @param button
+     * @return
+     */
     private String getButtonId(Button button) {
         String id = button.getId();
         if (id != null && !id.isEmpty()) {
@@ -305,6 +373,12 @@ public class SetShipsController {
         return null;
     }
 
+    /**
+     * method to traverse to the menu View
+     *
+     * @param event  event that called the method
+     * @throws IOException thrown  Loader type object
+     */
     private void goBackToMainMenu(ActionEvent event) throws IOException {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("main_menu.fxml"));
@@ -316,6 +390,13 @@ public class SetShipsController {
         stage.show();
     }
 
+    /**
+     * Method to traerse to game View
+     * sends game object to the Game Controler
+     * in cse of multiplayer game, starts  the connection to the server, fetches data of enemy board, and sends data of player's board
+     * @param event   event that called the method
+     * @throws IOException
+     */
     private void goToGameScreen(ActionEvent event) throws IOException {
 
 
@@ -377,6 +458,10 @@ public class SetShipsController {
         }
     }
 
+    /**
+     * method to make a  http call to the  server, and recive enemy ships data in Json Format
+     * @return true when call is  succesfully performed
+     */
     private Boolean getEnemyBoard() {
         Connection conn = new Connection();
         Map<String, String> map = new HashMap<String, String>() {{
@@ -420,6 +505,10 @@ public class SetShipsController {
 
     }
 
+    /**
+     * Method used to  read data of enemy ships to aray of basic attributes of x,y,alignment
+     * @param json JSONObject variable containing server response with enemy ships data
+     */
     private void setEnemyFromState(JSONObject json) {
         ArrayList<Integer> shipAtrib = null;
         JSONArray jsonArr = json.getJSONArray("ships");
@@ -451,6 +540,10 @@ public class SetShipsController {
         }
     }
 
+    /**
+     * Places enemy ships on his board, when playing multiplayer game
+     * @throws Exception
+     */
     private void setEnemyShipsFromState() throws Exception {
         if (game_this.getPlayer2().shipsCoordsAndAlignment.size() != 10) {
             System.out.println("adding ships to fields" +  "statków mniej niz 10 ");
@@ -463,6 +556,11 @@ public class SetShipsController {
         }
     }
 
+    /**
+     * Method getting game state from server and checking if the game is already started on server
+     * checks for presence of isStarted attribute
+     * @return true if game is started , false if it is not
+     */
     private boolean getGameStateForIfStarted() {
 
         Connection conn = new Connection();
@@ -514,6 +612,10 @@ public class SetShipsController {
         return gameStarted.get();
     }
 
+    /**
+     * sends JsonObject containing player ships data to the server
+     * @return
+     */
     private boolean gameSendMap() {
         String reqBodyShips = createSetBody();
 
@@ -559,6 +661,10 @@ public class SetShipsController {
         return shipsSet.get();
     }
 
+    /**
+     * Convertes  player Shisps  data to the JsonObject format, so that it can be sent to the server
+     * @return JsoonObject  with  all ships of  a player
+     */
     private String createSetBody() {
         JSONObject jsonParent = new JSONObject();
         JSONArray ships = new JSONArray();
@@ -583,6 +689,11 @@ public class SetShipsController {
         return reqBoody;
     }
 
+    /**
+     * method to check if server ha found game for the player
+     *
+     * @return true if game found, fales if not
+     */
     private boolean gameFound() {
         Connection conn2 = new Connection();
         RequestBody body = conn2.searchingGameBody(game_this.getPlayer1().getId());
@@ -630,6 +741,10 @@ public class SetShipsController {
         return gameFound.get();
     }
 
+    /**
+     * method used to join queue on the  server to find an opponent in multiplayer mode
+     * @return true if queue was joined, false if it was not
+     */
     private boolean joinGame() {
         Connection conn = new Connection();
         RequestBody body = conn.searchingGameBody(game_this.getPlayer1().getId());

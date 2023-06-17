@@ -1,23 +1,38 @@
+/**
+ * The PlayerAi class represents an AI player in the game.
+ * It extends the Player class and provides additional methods and properties specific to AI behavior.
+ */
 package com.battleships.battleshipsapp.model.players;
 
 
 import com.battleships.battleshipsapp.model.board.Board;
 import com.battleships.battleshipsapp.model.board.Field;
-import com.battleships.battleshipsapp.model.players.difficulty.Difficulty;
+
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-
+/**
+ * The PlayerAi class extends the abstract Player class and represents an AI player in the game.
+ * Privedes methods for geting AI move in game
+ * It implements Serializable to allow transfer of object.
+ */
 public class PlayerAi extends Player implements Serializable {
-    Difficulty difficulty;
+
+
 
     public ArrayList<ArrayList<Integer>> pojectionOfBoard = new ArrayList<>();
 
     public ArrayList<ArrayList<Integer>> targeted_ship = new ArrayList<>();
-    //this will be next version // to jest chyba wykonalne
+    //this will be next version // it is done
 
+
+    /**
+     * Constructs a new PlayerAi object with the specified ID.
+     *
+     * @param id the player's ID.
+     */
     public PlayerAi(int id) {
         super(id);
         for (int m = 0; m < 10; m++) {
@@ -34,6 +49,12 @@ public class PlayerAi extends Player implements Serializable {
     }
 
 
+    /**
+     * Generates an AI move based on the provided game board.
+     *
+     * @param board the game board.
+     * @return an ArrayList containing the x and y coordinates of the AI's move.
+     */
     public ArrayList<Integer> getAImove(Board board) {
         //  pojectionOfBoard.get(5).set(5,99);
         // pojectionOfBoard.get(5).set(6,98);
@@ -213,12 +234,5 @@ public class PlayerAi extends Player implements Serializable {
         return AImove;
     }
 
-    public void setDifficulty(Difficulty difficulty) {
-        this.difficulty = difficulty;
-    }
-
-    public Difficulty getDifficulty() {
-        return difficulty;
-    }
 
 }

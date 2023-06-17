@@ -40,7 +40,7 @@ public class MainMenuController {
         Parent setingView = loader.load();
         SetShipsController setShipsController = loader.getController();
         setShipsController.setMode(1);
-        setShipsController.setLocalId(9);//w przyszłości to musi byc uid zalogowanego gracza
+        setShipsController.setLocalId(8);//w przyszłości to musi byc uid zalogowanego gracza
 
         stage.setScene( new Scene(setingView));
         setShipsController.stageInit(stage);

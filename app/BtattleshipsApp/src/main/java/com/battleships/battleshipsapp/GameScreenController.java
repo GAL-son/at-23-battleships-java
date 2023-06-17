@@ -26,7 +26,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
-
+/**
+ * Class acting as a controller of  a View that is used to play a game with AI or human opponent via server
+ * Contains methods for playing the game, methods concerning server connection, ad utilities needed for presenting Game state to player
+ */
 public class GameScreenController {
     private static final int BOARD_SIZE = 10;
     private Stage stage;
@@ -39,33 +42,56 @@ public class GameScreenController {
     HashMap<String, Node> labelsPlayer2 = new HashMap<String, Node>();
     HashMap<String, Node> others = new HashMap<String, Node>();
 
+
+    /**
+     * Constructior of  a class that sets stage from a parameter
+     * @param primaryStage  that is used to  transfer between Views
+     */
     public GameScreenController(Stage primaryStage) {
         stage = primaryStage;
         initializeUI();
         stage.show();
     }
-
+    /**
+     * public  method used to call fucntion {@code initaliseUI()} when loading this Controller
+     * @param primaryStage
+     */
     public void stageInit(Stage primaryStage) {
         stage = primaryStage;
         initializeUI();
         stage.show();
     }
 
+    /**
+     * empty controler   for loading Controller class
+     */
     public GameScreenController() {
         // System.out.println(this.game.getPlayer1().getId());
     }
 
+
+    /**
+     * method to set game attribute of this class form data received from other  controller
+     * @param game_ game object sent form another controler
+     */
     public void setGame(Game game_) {
         this.game = game_;
         //  System.out.println(this.game.getPlayer1().getId());
     }
 
-
+    /**
+     * public  method used to call fucntion {@code initaliseUI()} when loading this Controller
+     * @param stage
+     */
     public void setStage(Stage stage) {
         this.stage = stage;
         initializeUI();
     }
 
+    /**
+     * method used to Define elements on the View
+     * defines: boards,, buttons and ship counters
+     */
     public void initializeUI() {
 
         System.out.println(this.game.getPlayer1().getId());
@@ -153,6 +179,9 @@ public class GameScreenController {
 
     }
 
+    /**
+     * metohd that fetches data from server and saving it in this instance of a game
+     */
     private void setStateFromSever() {
         Connection conn = new Connection();
 
@@ -201,6 +230,13 @@ public class GameScreenController {
         }
     }
 
+
+    /**
+     *  Method creating grid of a board that is acting as a board we play a game on
+     *  applies method handling clicks to the board elements
+     * @param p number specifying  whose board are we  creating (1 for player1, 2 for player2)
+     * @return gridPane with button elements that are a fields on a board
+     */
     private GridPane createBoard(int p) {
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
@@ -226,6 +262,11 @@ public class GameScreenController {
     }
 
 
+    /**
+     * Method that handles click events on the buttons that form a board
+     * method handles click events on specific fields to target them in shooting, and downloads information about where the enemy has atacked
+     * @param button that was clicked on
+     */
     private void handleButtonClick(Button button) {
         String id = getButtonId(button);
         System.out.println("Clicked button ID: " + id);
@@ -333,6 +374,11 @@ public class GameScreenController {
         drawBoardPlacing();
     }
 
+    /**
+     * method to perform shooting on a game  server
+     * @param x X coordinate to shoot
+     * @param y y coordinate to shoot
+     */
     private void shootOnServer(Integer x, Integer y) {
 
         Connection connection = new Connection();
@@ -375,6 +421,11 @@ public class GameScreenController {
 
     }
 
+    /**
+     * method used to shooting on a local app
+     * @param move Move object consisiting of shooting x,y coordinates and type of move
+     * @param player number soecifying who the shooting player is
+     */
     private void hitingProcedure(Move move, int player) {
 
         if (game.getType() == 1) {
@@ -394,6 +445,10 @@ public class GameScreenController {
 
     }
 
+    /**
+     * method to count cumulative hp of all ships of a players.
+     * starts procedure of ending game if hp of any player is 0
+     */
     private void countHP() {
         Integer pom1 = 0, pom2 = 0;
         for (Ship s : game.getPlayer1().ships) {
@@ -432,6 +487,11 @@ public class GameScreenController {
         }
     }
 
+    /**
+     * method to end game when the hp of any player reaches 0
+     * traverses to a end game view
+     * @param winner id of a  player that won a game
+     */
     private void GameEndProcedure(int winner) {
         game.setState(2);
         if (game.winner == game.getPlayer1().getId()) {
@@ -457,6 +517,11 @@ public class GameScreenController {
 
     }
 
+    /**
+     * method to traverse app to the end game screen
+     * @param i number  specifying witch player won (1 the local player , 2ai or remote player)
+     * @throws IOException
+     */
     private void goToMenu(int i) throws IOException {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("endGameScreen.fxml"));
@@ -469,7 +534,12 @@ public class GameScreenController {
         //endGameScrean.stageInit(stage);
 
     }
-
+    /**
+     *
+     * method resolving button to the id it was given on creation
+     * @param button
+     * @return
+     */
     private String getButtonId(Button button) {
         String id = button.getId();
         if (id != null && !id.isEmpty()) {
@@ -477,12 +547,21 @@ public class GameScreenController {
         }
         return null;
     }
-
+    /**
+     * method to gaet a hex value of a color with # at the beginning
+     * @param color Color that we want  to use
+     * @return hex vale if form of string describing specified in parameter color
+     */
     private String toHex(Color color) {
         return "#" + color.toString().substring(2, 8);
     }
 
 
+
+    /**
+     * method  that aplies styles to board grid so that it represents  the real state of board.
+     * sets text in labels to present number of  a ships that are still alive
+     */
     private void drawBoardPlacing() {
         Button button;
         System.out.println("board drawn");
