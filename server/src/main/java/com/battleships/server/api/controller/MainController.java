@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,21 +20,29 @@ import org.springframework.web.server.ResponseStatusException;
 import com.battleships.server.api.Exceptions.GameNotFoundExeption;
 import com.battleships.server.api.Exceptions.InvalidPasswordException;
 import com.battleships.server.api.Exceptions.NoUserException;
+
 import com.battleships.server.api.model.Field;
 import com.battleships.server.api.model.Game;
 import com.battleships.server.api.model.Move;
 import com.battleships.server.api.model.User;
-import com.battleships.server.service.GameService;
-import com.battleships.server.service.UserService;
+
+import com.battleships.server.service.*;
 
 
-
+/**
+ * Class handling HTTP request mapping
+ */
 @RestController
 public class MainController {
     
     private final UserService userService;
     private final GameService gameService;
 
+    /**
+     * Constructor of MainController
+     * @param userService UserService object (Autowired)
+     * @param gameService GameService object (Autowired)
+     */
     @Autowired
     public MainController(UserService userService, GameService gameService)
     {
@@ -432,17 +441,4 @@ public class MainController {
         
         return true;
     }
-
-    //TODO: Delete this later - method for testing
-    @PostMapping(value="path")
-    public float postMethodName(@RequestParam int uid, @RequestParam float score) {
-        User u = userService.userRepository.getReferenceById(uid);
-        u.setGamerScore(score);
-
-        userService.userRepository.save(u);
-        
-        return u.getGamerScore();
-    }
-    
-
 }
