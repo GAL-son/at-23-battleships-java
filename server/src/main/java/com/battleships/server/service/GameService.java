@@ -121,12 +121,17 @@ public class GameService {
             return null;
         }
         
-        /* DEBUG */ System.out.println(userQueue);
+        /* DEBUG */ // System.out.println(userQueue);
         addGame(game);
         
         return game;
     }
 
+    /**
+     * Method that gives a Game reference which is played by given User
+     * @param user whose game we want to get
+     * @return Game reference which is played by User (Can be <b>null</b>)
+     */
     public Game getPlayerGame(User user) {
         for(Map.Entry<User, Game> m : playersInGame.entrySet()) {
             if(user.getUid() == m.getKey().getUid()) return m.getValue();
@@ -134,6 +139,10 @@ public class GameService {
         return null;
     }
 
+    /**
+     * Method used to ending a game for given user
+     * @param user User whose game we want to end
+     */
     public void endGame(User user) {
         Game game = playersInGame.get(user);        
         playersInGame.remove(user);
