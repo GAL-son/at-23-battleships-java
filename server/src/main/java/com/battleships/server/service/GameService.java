@@ -152,25 +152,6 @@ public class GameService {
         }
     }
 
-    // public boolean makeMove(int gid, User user, Move move){
-    //     Game game = this.getGame(gid);
-    //     // TODO: Make exceptions
-    //     if(game == null) throw new GameNotFoundExeption();
-    //     if(!game.isPlayerInGame(user)) throw new PlayerNotInGameExeption();
-
-    //     // TODO: Prolly make exeptionn for this
-    //     //game.makeMove(user.getUid(), move);
-
-    //     return false;
-    // }
-    
-    // public boolean isGameStated(int gid) throws Exception {
-    //     Game game = this.getGame(gid);
-    //     if(game == null) throw new Exception("LMAO NO GAME");
-
-    //     return game.isGameStarted();
-    // }
-
     // Helper functions
     private void addGame(Game game)
     {
