@@ -313,6 +313,7 @@ public class SetShipsController {
         stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(mainMenuView));
         mainMenuController.setStage(stage);
+        mainMenuController.setUid(local_uid);
         stage.show();
     }
 

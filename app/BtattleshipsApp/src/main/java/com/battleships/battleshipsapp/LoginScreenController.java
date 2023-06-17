@@ -1,9 +1,13 @@
 package com.battleships.battleshipsapp;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import okhttp3.RequestBody;
 import org.json.JSONObject;
 
@@ -11,8 +15,17 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class LoginScreenController {
+    Stage stage;
+    private Integer uid;
 
-    private String uid;
+    public LoginScreenController(){
+        this.stage = (Stage) App.getScene().getWindow();
+    }
+
+    public void setStage(Stage stage) {
+        this.stage=stage;
+    }
+
     @FXML
     TextField loginField;
 
@@ -26,16 +39,19 @@ public class LoginScreenController {
         boolean isLogged = login(loginField.getText(), passwordField.getText());
 
         if(isLogged){
-            App.setRoot("main_menu");
+            try {
+                goToMainMenu();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }else{
             incorrectPasswordLabel.setVisible(true);
         }
     }
 
-
     @FXML
     private void onCancelButtonClick(){
-        App.setRoot("start_screen");
+        //App.setRoot("start_screen");
     }
 
     private boolean login(String login, String password){
@@ -56,7 +72,7 @@ public class LoginScreenController {
                     isAuthorized.set(true);
                 }
 
-                setUid(String.valueOf(json.get("uid")));
+                setUid((Integer) json.get("uid"));
 
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -78,11 +94,16 @@ public class LoginScreenController {
         return isAuthorized.get();
     }
 
-    public void setUid(String uid) {
+    public void setUid(Integer uid) {
         this.uid = uid;
     }
 
-    public String getUid() {
-        return uid;
+    private void goToMainMenu() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("main_menu.fxml"));
+        Parent mainMenuView = loader.load();
+        MainMenuController mainMenuController = loader.getController();
+        mainMenuController.setUid(uid);
+
+        stage.setScene( new Scene(mainMenuView));
     }
 }

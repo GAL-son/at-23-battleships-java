@@ -7,9 +7,10 @@ import java.io.IOException;
 
 public class StartScreenController {
     @FXML
-    private void onLoginButtonClick() {
+    protected void onLoginButtonClick() {
         App.setRoot("login_screen");
     }
+
     @FXML
     private void onPlayAsGuestButtonClick() {
         App.setRoot("main_menu");
