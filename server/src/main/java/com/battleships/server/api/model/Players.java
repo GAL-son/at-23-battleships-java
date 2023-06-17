@@ -1,7 +1,7 @@
-package com.battleships.server.api.model;
+// package com.battleships.server.api.model;
 
-public enum Players
-{
-    PLAYER1,
-    PLAYER2
-}
+// public enum Players
+// {
+//     PLAYER1,
+//     PLAYER2
+// }
