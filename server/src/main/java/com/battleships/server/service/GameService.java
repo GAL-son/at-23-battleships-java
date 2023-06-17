@@ -153,6 +153,11 @@ public class GameService {
     }
 
     // Helper functions
+
+    /**
+     * Method that adds Game into activeGames
+     * @param game Game that we want to make active
+     */
     private void addGame(Game game)
     {
         activeGames.add(game);
