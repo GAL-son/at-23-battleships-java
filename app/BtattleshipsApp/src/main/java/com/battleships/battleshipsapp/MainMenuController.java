@@ -24,7 +24,6 @@ public class MainMenuController {
 
     @FXML
     private void playSinglePlayer() {
-
         new SetShipsController(this.stage);
     }
 }

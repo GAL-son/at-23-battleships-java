@@ -25,7 +25,7 @@ import java.util.Random;
 public class SetShipsController {
     private static final int BOARD_SIZE = 10;
     private Stage stage;
-    public Integer test = 1;
+    public Integer mode = 0;
     Integer alignemnet = 0;
     Game game_this;
 
@@ -41,8 +41,8 @@ public class SetShipsController {
         this.alignemnet=(alignemnet+1)%2;
     }
 
-    public void setTest(Integer test_) {
-        this.test=test_;
+    public void setMode(Integer mode) {
+        this.mode=mode;
     }
 
 
