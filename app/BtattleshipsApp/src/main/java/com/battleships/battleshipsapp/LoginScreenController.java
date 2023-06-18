@@ -14,74 +14,104 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * The controller class for the login screen in the Battleships application.
+ */
 public class LoginScreenController {
-    Stage stage;
+    private Stage stage;
     private Integer uid;
 
-    public LoginScreenController(){
-       this.stage = (Stage) App.getScene().getWindow();
+    /**
+     * Constructs a new instance of the LoginScreenController class.
+     * Initializes the stage with the current window stage.
+     */
+    public LoginScreenController() {
+        this.stage = (Stage) App.getScene().getWindow();
     }
 
+    /**
+     * Sets the stage for this login screen.
+     *
+     * @param stage the stage to set
+     */
     public void setStage(Stage stage) {
-        this.stage=stage;
+        this.stage = stage;
     }
 
     @FXML
-    TextField loginField;
+    private TextField loginField;
 
     @FXML
-    PasswordField passwordField;
+    private PasswordField passwordField;
 
     @FXML
-    Label incorrectPasswordLabel;
+    private Label incorrectPasswordLabel;
+
+    /**
+     * Handles the event when the login button is clicked.
+     * Attempts to log in with the provided credentials.
+     * If successful, navigates to the main menu screen.
+     */
     @FXML
-    private void onLoginButtonClick(){
+    private void onLoginButtonClick() {
         boolean isLogged = login(loginField.getText(), passwordField.getText());
 
-        if(isLogged){
+        if (isLogged) {
             try {
                 goToMainMenu();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        }else{
+        } else {
             incorrectPasswordLabel.setVisible(true);
         }
     }
 
+    /**
+     * Handles the event when the cancel button is clicked.
+     * Navigates back to the start screen.
+     *
+     * @throws IOException if an error occurs while loading the start_screen2.fxml file
+     */
     @FXML
     private void onCancelButtonClick() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("start_screen2.fxml"));
         Parent startScreen = loader.load();
         StartScreen2 startScreen2 = loader.getController();
         startScreen2.setStage(stage);
-        stage.setScene( new Scene(startScreen));
+        stage.setScene(new Scene(startScreen));
     }
 
+    /**
+     * Handles the event when the register button is clicked.
+     * Navigates to the register screen.
+     *
+     * @throws IOException if an error occurs while loading the register_screen.fxml file
+     */
     @FXML
     private void onRegisterButtonClick() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("register_screen.fxml"));
         Parent registerScreen = loader.load();
         RegisterScreenController registerScreenController = loader.getController();
         registerScreenController.setStage(stage);
-        stage.setScene( new Scene(registerScreen));
+        stage.setScene(new Scene(registerScreen));
     }
 
-    private boolean login(String login, String password){
+    private boolean login(String login, String password) {
         Connection connection = new Connection();
         RequestBody body = connection.playerRequestBody(login, password);
         AtomicBoolean isAuthorized = new AtomicBoolean(false);
         Object lock = new Object();
         new Thread(() -> {
-            try{
-                String response = connection.post(Endpoints.LOGIN.getEndpoint(),body);
+            try {
+                String response = connection.post(Endpoints.LOGIN.getEndpoint(), body);
                 JSONObject json = Connection.stringToJson(response);
 
                 System.out.println(json);
-                if(json.has("status")){
+                if (json.has("status")) {
                     String status = json.getString("status");
-                    System.out.println("status"+status);
-                }else{
+                    System.out.println("status" + status);
+                } else {
                     isAuthorized.set(true);
                 }
 
@@ -107,6 +137,11 @@ public class LoginScreenController {
         return isAuthorized.get();
     }
 
+    /**
+     * Sets the uid (user id) for this login session.
+     *
+     * @param uid the uid to set
+     */
     public void setUid(Integer uid) {
         this.uid = uid;
     }
@@ -117,6 +152,6 @@ public class LoginScreenController {
         MainMenuController mainMenuController = loader.getController();
         mainMenuController.setUid(uid);
         mainMenuController.setStage(stage);
-        stage.setScene( new Scene(mainMenuView));
+        stage.setScene(new Scene(mainMenuView));
     }
 }
