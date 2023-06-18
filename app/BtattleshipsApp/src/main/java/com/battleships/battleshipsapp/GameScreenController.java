@@ -539,7 +539,7 @@ public class GameScreenController {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("endGameScreen.fxml"));
         Parent end = loader.load();
-        EndGameScrean endGameScrean = loader.getController();
+        EndGameScreen endGameScrean = loader.getController();
         endGameScrean.setWin(i);
         endGameScrean.setUid(this.game.getPlayer1().getId());
         endGameScrean.setStage(stage);
