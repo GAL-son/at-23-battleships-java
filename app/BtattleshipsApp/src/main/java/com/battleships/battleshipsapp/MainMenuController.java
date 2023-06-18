@@ -22,7 +22,6 @@ public class MainMenuController {
 
     @FXML
     private void logOut() throws IOException {
-       // App.setRoot("start_screen");
         FXMLLoader loader = new FXMLLoader(getClass().getResource("start_screen2.fxml"));
         Parent startScreen = loader.load();
         StartScreen2 startScreen2 = loader.getController();
@@ -36,9 +35,7 @@ public class MainMenuController {
         Parent setingView = loader.load();
         SetShipsController setShipsController = loader.getController();
         setShipsController.setMode(0);
-        //if(uid == null){
-            setShipsController.setLocalId(uid);
-        //}
+        setShipsController.setLocalId(uid);
 
         stage.setScene( new Scene(setingView));
         setShipsController.stageInit(stage);

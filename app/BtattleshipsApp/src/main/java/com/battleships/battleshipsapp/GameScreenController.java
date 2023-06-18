@@ -6,7 +6,6 @@ import com.battleships.battleshipsapp.model.Move;
 import com.battleships.battleshipsapp.model.board.Field;
 import com.battleships.battleshipsapp.model.players.PlayerAi;
 import com.battleships.battleshipsapp.model.ship.Ship;
-import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -461,13 +460,11 @@ public class GameScreenController {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("endGameScreen.fxml"));
         Parent end = loader.load();
-        EndGameScrean endGameScrean = loader.getController();
-        endGameScrean.setWin(i);
-        endGameScrean.setStage(stage);
-        endGameScrean.draw();
+        EndGameScreen endGameScreen = loader.getController();
+        endGameScreen.setWin(i);
+        endGameScreen.setStage(stage);
+        endGameScreen.draw();
         stage.setScene( new Scene(end));
-        //endGameScrean.stageInit(stage);
-
     }
 
     private String getButtonId(Button button) {
