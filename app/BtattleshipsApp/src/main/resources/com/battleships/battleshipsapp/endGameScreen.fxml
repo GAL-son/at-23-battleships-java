@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.battleships.battleshipsapp.EndGameScrean">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.battleships.battleshipsapp.EndGameScreen">
    <children>
       <Label fx:id="winnerLabel" layoutX="266.0" layoutY="174.0" prefHeight="17.0" prefWidth="77.0" text="Label" />
       <Button layoutX="227.0" layoutY="315.0" mnemonicParsing="false" onAction="#goToMenu" prefHeight="25.0" prefWidth="176.0" text="wróć do menu głównego" />

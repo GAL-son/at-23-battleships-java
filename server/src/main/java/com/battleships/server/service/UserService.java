@@ -14,26 +14,40 @@ import com.battleships.server.api.Exceptions.NoUserException;
 import com.battleships.server.api.model.User;
 import com.battleships.server.api.repository.UserRepository;
 
-
+/**
+ * Class responsible for managing active user user data.
+ */
 @Service
 public class UserService {
     
     List<User> activeUsers;
     public final UserRepository userRepository;
 
+    /**
+     * UserService constructor. Creates new acrive user pool. 
+     * @param userRepository - Interface for connecting to database - (Auto implemented by JPA)
+     */
     @Autowired
     public UserService(UserRepository userRepository) {
-        activeUsers = new LinkedList<User>();
         this.userRepository = userRepository;
         this.activeUsers = new LinkedList<>();
     }
 
+    /**
+     * Method used to log in to server. Method checks if user exists in database,
+     * and adds this user into active users pool.
+     * @param login user login
+     * @param passwd user password
+     * @return User that has logged in
+     * @throws NoUserException if given user does not exist in the database
+     * @throws InvalidPasswordException if user exists but given password is incorrect
+     */
     public User loginUser(String login, String passwd) throws NoUserException, InvalidPasswordException {
         Optional<User> optUser = userRepository.getUserByLogin(login);
         if(optUser.isPresent()) {
             System.out.println(optUser.get().toString());
         }
-        //return userRepository.getReferenceById(0);
+
         if(optUser.isEmpty()) {
             throw new NoUserException("No Such User");
         }
@@ -41,21 +55,33 @@ public class UserService {
 
         if(passwd.equals(u.getPassword())) {
             activeUsers.add(u);
-            /* DEBUG */ System.out.println("USER " + u.getLogin() + " Loged in");
+            /* DEBUG */ // System.out.println("USER " + u.getLogin() + " Loged in");
             return u;
         } else {
             throw new InvalidPasswordException("PASSWORD INVALID");
         }
     }
 
-    public User getActiveUser(int id) {
+    /**
+     * Method used to get active user reference by his ID
+     * @param id id of user
+     * @return User reference
+     * @throws NoUserException when user with given id is not present in active users pool
+     */
+    public User getActiveUser(int id) throws NoUserException{
         for (User u : activeUsers) {
             if(u.getUid() == id) return u;
         }
         throw new NoUserException("User not logged in.");
     }
 
-    public User getActiveUser(String login) {
+    /**
+     * Method used to ger active user reference by his login
+     * @param login user login
+     * @return User reference
+     * @throws NoUserException when user with given login is not present in active users pool
+     */
+    public User getActiveUser(String login) throws NoUserException{
         for (User u : activeUsers) {
             if(u.getLogin().equals(login)) return u;
         }
@@ -84,7 +110,14 @@ public class UserService {
         return user;
     }
 
-    public Boolean logout(String login, String password)
+    /**
+     * Method used to log out given user from server. User is removed from active user pool
+     * @param login user login
+     * @param password user password
+     * @return True if user has been logged out successfuly
+     * @throws InvalidPasswordException when given password is incorrect
+     */
+    public Boolean logout(String login, String password) throws InvalidPasswordException
     {
         for(User u : activeUsers) {
             if(u.getLogin().equals(login) && !u.getPassword().equals(password)) {
@@ -100,6 +133,10 @@ public class UserService {
         return false;
     }
 
+    /**
+     * Method that returns all users in database
+     * @return List of User's saved in database
+     */
     public List<User> getUsers()
     {
         return userRepository.findAll();

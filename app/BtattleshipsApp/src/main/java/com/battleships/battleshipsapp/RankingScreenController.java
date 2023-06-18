@@ -38,8 +38,7 @@ public class RankingScreenController {
     private void initialize() {
         setUpRankingModels();
 
-        //for (JSONObject rowData : rankingInfo) {
-            for(int row = 0; row < rankingInfo.size(); row++){
+        for(int row = 0; row < rankingInfo.size(); row++){
             String nickname = rankingInfo.get(row).getString("login");
             Double score = rankingInfo.get(row).getDouble("gamerScore");
 
