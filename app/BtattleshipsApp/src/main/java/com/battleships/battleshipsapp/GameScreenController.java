@@ -168,7 +168,20 @@ public class GameScreenController {
         Scene scene = new Scene(mainLayout, 1050, 800);
         stage.setScene(scene);
         drawBoardPlacing();
+
+        setStateFromSever();
         if (game.getType() == 1) {
+            Label trun =(Label) this.others.get("turn");
+            if (game.gameStateFromServer.getLastx() == null && game.gameStateFromServer.getTurnid() == game.getPlayer1().getId())
+            {
+                trun.setText(turnLabel.getText() + "your turn");
+
+            }else if (game.gameStateFromServer.getLastx() == null && game.gameStateFromServer.getTurnid() == game.getPlayer2().getId())
+            {
+                trun.setText(turnLabel.getText() + "enemy's turn");
+
+            }
+
             if (game.getTurn() == 0) {
                 if (game.getPlayer1().getId() == game.gameStateFromServer.getTurnid()) ;
                 {
@@ -596,11 +609,7 @@ public class GameScreenController {
                 } else {
                     button.setStyle("-fx-background-color: " + toHex(Color.WHITE) + ";" + "-fx-border-color: " + toHex(Color.BLACK) + ";");
                 }
-//                if (((Field) (game.getPlayer2().getPlayerBard().fields.get(y).get(x))).isOccupied()) {                                                //DEBUG
-//                    button.setStyle("-fx-background-color: " + toHex(Color.RED) + ";" + "-fx-border-color: " + toHex(Color.BLACK) + ";");             //DEBUG
-//                } else {                                                                                                                              //DEBUG
-//                    button.setStyle("-fx-background-color: " + toHex(Color.WHITE) + ";" + "-fx-border-color: " + toHex(Color.BLACK) + ";");           //DEBUG
-//                }                                                                                                                                     //DEBUG
+                                                                                                                                    //DEBUG
 
             }
         }
