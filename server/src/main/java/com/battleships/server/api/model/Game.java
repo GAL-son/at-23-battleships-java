@@ -11,6 +11,9 @@ import org.springframework.web.server.ResponseStatusException;
 import com.battleships.server.api.Exceptions.InvalidFieldException;
 import com.battleships.server.api.Exceptions.PlayerNotInGameExeption;
 
+/**
+ * Class representing game state
+ */
 public class Game {
     private int gameId;
 
@@ -37,10 +40,15 @@ public class Game {
     private String p2ShipSetup;
     private float p2Score;
 
-    // Move History
+    /** Move History */ 
     private List<Move> history;
         
-    // Constructor
+    /**
+     * Game constructor.
+     * Initializes variables and lists
+     * @param gid new game ID
+     * @param boardSize size of the board
+     */
     public Game(int gid, int boardSize) {
         this.gameId = gid;
         this.boardSize = boardSize;
@@ -84,40 +92,59 @@ public class Game {
         history = new LinkedList<>();
     }
 
-    // Getters
+    /**
+     * Get game ID
+     * @return game ID
+     */
     public int getGameId() {
         return gameId;
     }
 
+    /**
+     * Get game turn - information which player can now make a move
+     * @return 0 or 1 depending which player can now move
+     */
     public int getTurn() {
         return turn;
     }
 
+    /**
+     * Return player 1 reference
+     * @return User who is player 1
+     */
     public User getPlayer1() {
         return player1;
     }
 
+    /**
+     * Return player 2 reference
+     * @return User who is player 2
+     */
     public User getPlayer2() {
         return player2;
     }
 
+    /**
+     * Method used to check if the game has started
+     * @return {@code true} id game has started, {@code false} otherwise
+     */
     public boolean isGameStarted() {
         return gameStarted;
     }
 
-    public float getP1Score() {
-        return p1Score;
-    }
-
-    public float getP2Score() {
-        return p2Score;
-    }
-
+    /**
+     * Get number of turns that the game has
+     * @return number of turns
+     */
     public int getTurnNum() {
         return turnNum;
     }
 
-    // WHEN CONFLICT TAKE THIS
+    /**
+     * Returns given player ship setup based on the uid
+     * @param uid uid of player that setup we want to get
+     * @return {@link com.battleships.server.api.controller.MainController#setShips(int, String) Json formatted string} containing ship placement
+     */
     public String getPlayerSetup(int uid) {
         int player = getPlayerFromPid(uid);
 
@@ -128,6 +155,11 @@ public class Game {
         }
     }
 
+    /**
+     * Used to set player setup variable
+     * @param uid ID of player whose setup we want to save
+     * @param setup {@link com.battleships.server.api.controller.MainController#setShips(int, String) Json formatted string} contiaining setup
+     */
     public void setPlayerSetup(int uid, String setup) {
         int player = getPlayerFromPid(uid);
 
@@ -138,12 +170,21 @@ public class Game {
         }
     }
 
+    /**
+     * Returns last move from move history
+     * @return {@link com.battleships.server.api.model.Move Move} that was most recently made
+     */
     public Move getLastMove()
     {
         return (history.isEmpty()) ? null : history.get(history.size()-1);
     }
 
     // Game Functions
+    /**
+     * Used to add given user int game
+     * @param user {@link com.battleships.server.api.model.User User} that we want to add into game
+     * @throws Exception when game is full
+     */
     public void playerJoin(User user) throws Exception {
         if(gameStarted || gameFinished) throw new Exception("Game in progress");
 
@@ -156,10 +197,22 @@ public class Game {
         }
     }
 
+    /**
+     * Method used for checking if given user is in this game
+     * @param user {@link com.battleships.server.api.model.User User} that we want to check against
+     * @return {@code true} if player is in this game, {@code false} otherwise
+     */
     public boolean isPlayerInGame(User user) {
         return (user.getUid() == player1.getUid() || user.getUid() == player2.getUid()); 
     }
 
+    /**
+     * Method used to place one ship into the board
+     * @param pid ID of Player that places the ship
+     * @param shipSize new ship size
+     * @param shipFields List of {@link com.battleships.server.api.model.Field Fields} that contain given ship
+     * @throws Exception when ship is invalid size
+     */
     public void setShip(int pid, int shipSize, List<Field> shipFields) throws Exception {
         if(!(shipSize > 0 && shipSize < 5) || shipFields.size() != shipSize) {
             // TODO: Create invalid ship size exception
@@ -191,6 +244,11 @@ public class Game {
         if(p1Ships.size() == 10 && p2Ships.size() == 10) gameStarted = true;
     }
 
+    /**
+     * Method used for making a move in game
+     * @param move {@link com.battleships.server.api.model.Move Move} that is made in game
+     * @return {@code true} if given move was effective (ship was hit), {@code false} otherwise
+     */
     public Boolean makeMove(Move move){
         if(!gameStarted || gameFinished) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game not started or is finished");
         if(!isFieldCorrect(move.getMove())) throw new InvalidFieldException();
@@ -242,10 +300,19 @@ public class Game {
         return moveResult;
     }
 
+    /**
+     * Method used for checkong if game has ended
+     * @return {@code true} if game has ended, {@code false} otherwise
+     */
     public boolean isGameOver() {
         return (gameStarted && (p1FieldsAlive <= 0 || p2FieldsAlive <= 0));
     }
 
+    /**
+     * Method used for building current game state
+     * @param pid ID of user from whose perspective we want to build a game state
+     * @return {@link com.battleships.server.api.controller.MainController#getGameState(int) JSON formatted string} containing game state
+     */
     public JSONObject getGameStateUpdate(int pid) {
         JSONObject gameState = new JSONObject();
         gameState.put("gid", this.getGameId());
@@ -279,6 +346,11 @@ public class Game {
         return gameState;
     }
 
+    /**
+     * Returns opponent ID
+     * @param pid ID of player whose opponent we want to find in this game
+     * @return ID of opponent of user with given ID
+     */
     public int getOpponentPid(int pid) {
         if(pid == player1.getUid()) return player2.getUid();
         if(pid == player2.getUid()) return player1.getUid();
@@ -291,16 +363,28 @@ public class Game {
         throw new PlayerNotInGameExeption();
     }
 
+    /**
+     * Method that moves next turn
+     */
     public void nextTurn()
     {
         turn = (++turn)%2;
     }
 
+    /**
+     * Method returns score of player with given ID
+     * @param uid ID of player whose score we want to get
+     * @return Game score 
+     */
     public float getPlayerScore(int uid) {
         if(getPlayerFromPid(uid) == 0) return p1Score;
         else return p2Score;
     }
 
+    /**
+     * Method used for geting winner ID
+     * @return ID of player that won
+     */
     public int getWinnerUid() {
         if(!gameFinished)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "GAME NOT FINISHED");
@@ -309,6 +393,10 @@ public class Game {
         else return player1.getUid();
     }
 
+    /**
+     * Method used for giving up a game
+     * @param uid ID of player that wants to give up
+     */
     public void giveUp(int uid) {
         int player = getPlayerFromPid(uid);
 
@@ -349,16 +437,31 @@ public class Game {
 
 
     // Helper functions
-    private int getPlayerFromPid(int pid){
+    /**
+     * Converts user ID into local player number (0 or 1)
+     * @param pid ID of player that we want to convert
+     * @return (0 or 1)
+     * @throws PlayerNotInGameException when player with given ID in neither of the players in Game
+     */
+    private int getPlayerFromPid(int pid) throws PlayerNotInGameExeption{
         if(pid == player1.getUid()) return 0;
         if(pid == player2.getUid()) return 1;
         throw new PlayerNotInGameExeption();
     }
     
+    /**
+     * Checks if given field is contains within board limits
+     * @param field {@link com.battleships.server.api.model.Field Field} that we want to check
+     * @return {@code true} if field is within limits, {@code false} otherwise
+     */
     private Boolean isFieldCorrect(Field field){
         return ((field.x >= 0 && field.x < boardSize) && (field.y >= 0 && field.y < boardSize));
     }
 
+    /**
+     * Converts current turn into player ID that can make a move
+     * @return player ID that can make a move
+     */
     private int getTurnPid()
     {
         if(turn == 0) return player1.getUid();
