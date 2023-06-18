@@ -133,22 +133,6 @@ public class Game {
     }
 
     /**
-     * Get score that player 1 received during the game
-     * @return player 1 score
-     */
-    public float getP1Score() {
-        return p1Score;
-    }
-
-    /**
-     * Get score that player 2 received during the game
-     * @return player 2 score
-     */
-    public float getP2Score() {
-        return p2Score;
-    }
-
-    /**
      * Get number of turns that the game has
      * @return number of turns
      */
